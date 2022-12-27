@@ -9,6 +9,10 @@ class Discussion < ApplicationRecord
   accepts_nested_attributes_for :posts
 
 
+  # discussion.category_name
+  delegate :name, prefix: :category, to: :category, allow_nil: true
+
+  broadcasts_to :category, inserts_by: :prepend
 
 
   after_create_commit -> { broadcast_prepend_to "discussions" }
