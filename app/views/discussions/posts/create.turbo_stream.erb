@@ -1,0 +1,4 @@
+
+<%= turbo_stream.replace "new_post_form" do %>
+  <%= render partial: "discussions/posts/form", formats: :html, locals: { post: @post } %>
+<% end %>

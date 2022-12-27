@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_23_084405) do
+ActiveRecord::Schema.define(version: 2022_12_26_144525) do
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -50,13 +50,31 @@ ActiveRecord::Schema.define(version: 2022_12_23_084405) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.integer "discussions_count"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "discussions", force: :cascade do |t|
     t.string "name"
     t.boolean "closed", default: false
     t.integer "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "posts_count", default: 0
+    t.bigint "category_id"
     t.index ["user_id"], name: "index_discussions_on_user_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.integer "discussion_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["discussion_id"], name: "index_posts_on_discussion_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -74,4 +92,6 @@ ActiveRecord::Schema.define(version: 2022_12_23_084405) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "discussions", "users"
+  add_foreign_key "posts", "discussions"
+  add_foreign_key "posts", "users"
 end
